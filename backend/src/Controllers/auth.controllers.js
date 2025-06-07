@@ -98,7 +98,12 @@ const logoutUser = asyncHandler(async (req,res)=>{
     new ApiResponse(201,"User logedOut succesfull !!")
   )
 })
+
+const updateProfile = asyncHandler(async(req,res)=>{
+
+})
 export {signUpUser,
     loginUser,
-   logoutUser
+   logoutUser,
+   updateProfile
 }
