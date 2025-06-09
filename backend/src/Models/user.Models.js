@@ -5,6 +5,10 @@ email:{
     type : String,
     required : true
 },
+username:{
+    type : String,
+    required : true
+},
 fullName:{
     type : String,
     required : true
@@ -54,8 +58,7 @@ userSchema.methods.generateRefreshTokens = function(){
 }
 
 
-const User = mongoose.model("User",userSchema);
+export const User = mongoose.model("User",userSchema);
 
-export default User;
 
 

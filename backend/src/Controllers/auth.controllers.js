@@ -1,9 +1,9 @@
-import User from "../Models/user.Models.js"
+import {User} from "../Models/user.Models.js"
 import { ApiResponse } from "../Utils/apiResponse.js"
-import asyncHandler from "../Utils/asyncHandller.js"
+import {asyncHandler} from "../Utils/asyncHandller.js"
 import { ApiError } from "../Utils/ApiError.js"
-
-
+import Cloudniary from "../Utils/Cloudinary.js"
+import bcrypt from "bcryptjs"
 const GenerateAccessRefresh =  async (userid)=>{
 try {
     const user = await User.findById(userid);
@@ -22,8 +22,8 @@ try {
   }
 const signUpUser = asyncHandler(async(req,res)=>{
 
-    const{email,password,fullName}= req.body;
-    if(!email || !password || !fullName){
+    const{email,password,fullName,username}= req.body;
+    if(!email || !password || !fullName || !username){
         throw new ApiError(401,"All feilds are required",error.message)
     }
     if(password.length<6){
@@ -33,13 +33,14 @@ const signUpUser = asyncHandler(async(req,res)=>{
     if(user){
         throw new ApiError(401,"User aready exists")
     }
-    const salt = await bcrypt.getSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const handlePassword = await bcrypt.hash(password,salt);
 
     const newUser = await User.create({
         email,
         fullName,
         password : handlePassword,
+        username
     })
     const createUser = await User.findById(newUser._ud).select("-password -refreshToken");
     if(!createUser){
@@ -100,10 +101,44 @@ const logoutUser = asyncHandler(async (req,res)=>{
 })
 
 const updateProfile = asyncHandler(async(req,res)=>{
-
+const {profileImage}= req.body;
+const userId = req.user._id;
+if(!profileImage){
+    throw new ApiError(401,"Please upload an image");
+}
+const uploadReaspone = await Cloudniary.uploader.upload(profileImage);
+if(!uploadReaspone){
+    throw new ApiError(401,"Error while uploading to cloudinary")
+}
+const updateUser = await User.findByIdAndUpdate(
+    userId,{
+        $set :{
+            profileImage : profileImage
+        }
+    },
+    {
+        new : true
+    }
+)
+if(!updateUser){
+    throw new ApiError(400,"Error while updating the profile")
+}
+return res.status(201)
+          .json(
+            new ApiResponse(201,profileImage,"Profile updated successfully")
+          )
 })
+
+const checkAuth = (req,res)=>{
+    try {
+        return res.status(201).json(req.user)
+    } catch (error) {
+        throw new ApiError(500,`Please login ${error.message}`)
+    }
+}
 export {signUpUser,
     loginUser,
    logoutUser,
-   updateProfile
+   updateProfile,
+   checkAuth
 }
