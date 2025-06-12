@@ -1,5 +1,5 @@
 import express from "express"
-import { VerifyJWT } from "../Middlewares/auth.midleware"
+import { VerifyJWT } from "../Middlewares/auth.midleware.js"
 import {getUserForSideBar,getMessages,sendMessage} from "../Controllers/message.controllers.js"
 
 const routerM = express.Router()

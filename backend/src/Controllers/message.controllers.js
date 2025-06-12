@@ -67,7 +67,7 @@ const sendMessage = asyncHandler(async(req,res)=>{
     throw new ApiError(500,"Error while sending the message",error)
   }
 })
-export default {
+export  {
     getUserForSideBar,
     getMessages,
     sendMessage
