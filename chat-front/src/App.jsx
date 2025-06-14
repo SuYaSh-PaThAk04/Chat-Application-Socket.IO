@@ -28,7 +28,7 @@ console.log({authUser});
        <Routes>
         <Route path='/' element={authUser ? <Homepage/> : <Navigate to="/login"/>}/>
          <Route path='/signup' element={<SignUp/>}/>
-          <Route path='/login' element={!authUser ?<Login /> : <Navigate to="/" />}/>
+          <Route path='/login' element={<Login />}/>
            <Route path='/settings' element={ !authUser ?<SettingsPage /> : <Navigate to="/" />}/>
             <Route path='/profile' element={authUser ? <Profile/>: <Navigate to='/login' />}/>
        </Routes>

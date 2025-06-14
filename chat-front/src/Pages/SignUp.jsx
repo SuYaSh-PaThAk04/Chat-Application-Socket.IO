@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { AuthStore } from '../Store/AuthStore';
 import { MessageSquare,User,Mail,Lock,Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import AuthImage from "../Images/1900852.jpg"
+import AuthImagePattern from '../Components/AuthImage';
 import toast from 'react-hot-toast';
 function SignUp() {
 
@@ -136,14 +136,12 @@ function SignUp() {
       </div>
 
       {/* right side */}
-{/*
-      <AuthImage
+
+     <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
-      />
-      */}
+      /> 
     </div>  
-    
           </>
   )
 }
