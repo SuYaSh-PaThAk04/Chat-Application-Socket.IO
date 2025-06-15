@@ -9,13 +9,14 @@ import NavBar from './Components/NavBar'
 import { AuthStore } from './Store/AuthStore'
 import { Loader } from 'lucide-react'
 import { Toaster } from 'react-hot-toast'
+import { useThemeStore } from './Store/ThemeStore'
 
 function App() {
   const {authUser , checkAuth, isCheckingAuth}= AuthStore();
   useEffect(()=>{
     checkAuth()
   },[checkAuth])
-console.log({authUser});
+   const {theme } = useThemeStore()
 
   if(isCheckingAuth && !authUser){
 <div className='flex item-center justify-cemter h-screen'>
@@ -30,7 +31,7 @@ console.log({authUser});
          <Route path='/signup' element={<SignUp/>}/>
           <Route path='/login' element={<Login />}/>
            <Route path='/settings' element={ !authUser ?<SettingsPage /> : <Navigate to="/" />}/>
-            <Route path='/profile' element={authUser ? <Profile/>: <Navigate to='/login' />}/>
+            <Route path='/profile' element={<Profile/>}/>
        </Routes>
        <Toaster/>
     </>

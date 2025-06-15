@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { axiosInstance } from "../Axios/axios";
-import SignUp from "../Pages/SignUp";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { data } from "react-router-dom";
 
 
 export const AuthStore = create((set)=>({
     authUser : null,
-     isUpadetingProfile : false,
+     isUpdatingProfile : false,
      isSigningUp : false,
      isLoggingIn : false,
     isCheckingAuth : true,
@@ -63,6 +64,19 @@ export const AuthStore = create((set)=>({
         } catch (error) {
             console.log("Error while loggingOut ",error)
             toast.error(error.response.data.message)
+        }
+    },
+    updateProfile : async(data)=>{
+        set({isUpdatingProfile : true})
+        try {
+            const res = await axiosInstance.put("/auth/update-profile",data)
+            set({authUser : res.data});
+            toast.success("Profile picture updated succesfully ");
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message)
+        }finally{
+            set({isUpdatingProfile : false})
         }
     }
 }))
