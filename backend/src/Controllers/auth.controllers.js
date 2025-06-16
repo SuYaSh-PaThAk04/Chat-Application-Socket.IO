@@ -42,7 +42,7 @@ const signUpUser = asyncHandler(async(req,res)=>{
         password : handlePassword,
         username
     })
-    const createUser = await User.findById(newUser._ud).select("-password -refreshToken");
+    const createUser = await User.findById(newUser._id).select("-password -refreshToken");
     if(!createUser){
         throw new ApiError(410,"Error while signing in")
     }
