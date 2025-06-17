@@ -7,8 +7,8 @@ import bcrypt from "bcryptjs"
 const GenerateAccessRefresh =  async (userid)=>{
 try {
     const user = await User.findById(userid);
-    const accessToken = user.generateAccessTokens(userid);
-    const refreshToken = user.generateRefreshTokens(userid);
+    const accessToken = user.generateAccessToken(userid);
+    const refreshToken = user.generateRefreshToken(userid);
        user.refreshToken = refreshToken;
       await user.save({validateBeforeSave : false});
       return {accessToken,refreshToken};
@@ -64,11 +64,11 @@ const loginUser = asyncHandler(async (req,res)=>{
     if(!ValidatePassword){
         throw new ApiError(400,'Invalid Password');
     }
-const {accessToken,refreshToken}= GenerateAccessRefresh(user._id);
+const {accessToken,refreshToken}= await GenerateAccessRefresh(user._id);
 const LogedUser = await User.findById(user._id).select("-password -refreshToken");
 
 return res.status(201)
-      .cookie("accesToken",accessToken,options)
+      .cookie("accessToken", accessToken, options) 
       .cookie('refreshToken',refreshToken,options)
       .json(
         new ApiResponse(201,
@@ -100,34 +100,38 @@ const logoutUser = asyncHandler(async (req,res)=>{
   )
 })
 
-const updateProfile = asyncHandler(async(req,res)=>{
-const {profileImage}= req.body;
-const userId = req.user._id;
-if(!profileImage){
-    throw new ApiError(401,"Please upload an image");
-}
-const uploadReaspone = await Cloudniary.uploader.upload(profileImage);
-if(!uploadReaspone){
-    throw new ApiError(401,"Error while uploading to cloudinary")
-}
-const updateUser = await User.findByIdAndUpdate(
-    userId,{
-        $set :{
-            profileImage : profileImage
-        }
-    },
-    {
-        new : true
-    }
-)
-if(!updateUser){
-    throw new ApiError(400,"Error while updating the profile")
-}
-return res.status(201)
-          .json(
-            new ApiResponse(201,profileImage,"Profile updated successfully")
-          )
-})
+
+const updateProfile = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!req.file || !req.file.path) {
+    throw new ApiError(401, "Please upload an image");
+  }
+
+  const uploadResponse = await Cloudniary.uploader.upload(req.file.path, {
+    folder: "profileImages",
+    width: 500,
+    crop: "scale",
+  });
+
+  if (!uploadResponse?.secure_url) {
+    throw new ApiError(500, "Error while uploading to Cloudinary");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { profileImage: uploadResponse.secure_url },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    throw new ApiError(400, "Error while updating the profile");
+  }
+
+  return res.status(200).json(
+    new ApiResponse(200, updatedUser, "Profile updated successfully")
+  );
+});
 
 const checkAuth = (req,res)=>{
     try {

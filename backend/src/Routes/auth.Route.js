@@ -10,12 +10,7 @@ router.route("/login").post(loginUser)
 
 router.route("/logout").post(logoutUser)
 
-router.route("/update-profile").post(VerifyJWT,upload.fields([
-        {
-            name: "profileImage",
-            maxCount: 1
-        }
-    ]),updateProfile)
+router.route("/update-profile").post(VerifyJWT,upload.single("profileImage"),updateProfile)
 router.route("/check").get(VerifyJWT,checkAuth)
 
 export default router;
