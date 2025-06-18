@@ -4,8 +4,6 @@ import AuthImagePattern from '../Components/AuthImage';
 import { Eye, EyeOff, Loader2,Lock,Mail, MessageSquare } from 'lucide-react';
 import NavBar from '../Components/NavBar';
 import { Link } from 'react-router-dom';
-
-
 function Login() {
 
     const[showPassword,setShowPassword] = useState(false)
