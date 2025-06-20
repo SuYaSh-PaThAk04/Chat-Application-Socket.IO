@@ -4,6 +4,7 @@ import { ApiError } from "../Utils/ApiError.js";
 import { ApiResponse } from "../Utils/apiResponse.js";
 import { asyncHandler } from "../Utils/asyncHandller.js";
 import Cloudniary from "../Utils/Cloudinary.js";
+import { getRecieverid, io } from "../Utils/Socket.js";
 
 const getUserForSideBar = asyncHandler(async(req,res)=>{
 try {
@@ -34,39 +35,46 @@ try {
 }
 })
 
-const sendMessage = asyncHandler(async(req,res)=>{
+const sendMessage = asyncHandler(async (req, res) => {
   try {
-      const {text,image} = req.body;
-     const {id: recieverId} = req.params;
-    const senderId= req.user._id;
-    let imageUrl;
-    if(image){
-      const uploadResponse = await Cloudniary.uploader.upload(image);
-      imageUrl=uploadResponse.secure_url;
+    const { text, image } = req.body;
+    const { id: recieverId } = req.params;
+    const senderId = req.user._id;
+
+    let imageUrl = null;
+
+    if (image) {
+      try {
+        const uploadResponse = await Cloudniary.uploader.upload(image);
+        imageUrl = uploadResponse.secure_url;
+      } catch (uploadErr) {
+        throw new ApiError(501, "Image upload to Cloudinary failed", uploadErr);
+      }
     }
-    if(!imageUrl){
-        throw new ApiError(501,"Error while uploading the image to cloudinary",error)
+
+    const newMessage = new Message({
+      senderId,
+      recieverId,
+      text,
+      image: imageUrl,
+    });
+
+    await newMessage.save();
+
+    const recieverSocketId = getRecieverid(recieverId);
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("newMessage", newMessage);
     }
-  
-    const NewMessage =new Message({
-    senderId,
-    recieverId,
-    text,
-    image:imageUrl
-    })
-  
-    if(!NewMessage){
-      throw new ApiError(401,"Error while constructing the sending message",error)
-    }
-    await NewMessage.save()
-    return res.status(201)
-    .json(
-      new ApiResponse(204,NewMessage,"Succesfully sended the messages!!")
-    )
-  } catch (error) {
-    throw new ApiError(500,"Error while sending the message",error)
+
+    return res.status(201).json(
+      new ApiResponse(201, newMessage, "Message sent successfully")
+    );
+  } catch (err) {
+    console.error("Send message failed:", err);
+    throw new ApiError(500, "Error while sending the message", err);
   }
-})
+});
+
 export  {
     getUserForSideBar,
     getMessages,

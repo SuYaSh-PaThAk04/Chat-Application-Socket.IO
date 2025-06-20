@@ -8,9 +8,9 @@ router.route("/signup").post(signUpUser)
 
 router.route("/login").post(loginUser)
 
-router.route("/logout").post(logoutUser)
+router.route("/logout").post(VerifyJWT,logoutUser)
+router.route("/update-profile").put(VerifyJWT, upload.single("profileImage"), updateProfile);
 
-router.route("/update-profile").post(VerifyJWT,upload.single("profileImage"),updateProfile)
 router.route("/check").get(VerifyJWT,checkAuth)
 
 export default router;
