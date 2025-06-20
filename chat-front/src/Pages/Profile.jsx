@@ -14,12 +14,17 @@ const handleImageUpload = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  setSelectedImg(URL.createObjectURL(file)); // for preview
-  await updateProfile({ profileImage: file }); // pass File object directly
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = async () => {
+    const base64Image = reader.result;
+    await updateProfile({ profileImage: base64Image });
+    setSelectedImg(base64Image);
+  };
 };
-
-   
-
+if (!authUser) {
+  return <div>Loading...</div>;
+}
   return (
     <div>
         <NavBar />
@@ -33,7 +38,7 @@ const handleImageUpload = async (e) => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
-                src={selectedImg || user.profileImage || "/Avatar.jpg"}
+                src={selectedImg || user?.profileImage || "/Avatar.jpg"}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4 "
               />
@@ -87,7 +92,7 @@ const handleImageUpload = async (e) => {
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
                 
-                <span>{user.createdAt?.split("T")[0]}</span>
+                <span>{user?.createdAt?.split("T")[0]}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>

@@ -105,30 +105,23 @@ const logoutUser = asyncHandler(async (req,res)=>{
 })
 
 
-
 const updateProfile = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-if (!req.file) {
-  throw new ApiError(401, "Please upload an image");
-}
-  const streamUpload = () => {
-    return new Promise((resolve, reject) => {
-      const stream = Cloudniary.uploader.upload_stream(
-        {
-          folder: "profileImages",
-          width: 500,
-          crop: "scale",
-        },
-        (error, result) => {
-          if (result) resolve(result);
-          else reject(error);
-        }
-      );
-      streamifier.createReadStream(req.file.buffer).pipe(stream);
-    });
-  };
+  const { profileImage } = req.body;
 
-  const uploadResponse = await streamUpload();
+  if (!profileImage) {
+    throw new ApiError(400, "No image data received");
+  }
+
+  const uploadResponse = await Cloudniary.uploader.upload(profileImage, {
+    folder: "profileImages",
+    width: 500,
+    crop: "scale",
+  });
+
+  if (!uploadResponse?.secure_url) {
+    throw new ApiError(500, "Image upload failed");
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,
@@ -136,14 +129,11 @@ if (!req.file) {
     { new: true }
   );
 
-  if (!updatedUser) {
-    throw new ApiError(400, "Error while updating the profile");
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
+  return res.status(200).json(
+    new ApiResponse(200, updatedUser, "Profile updated successfully")
+  );
 });
+
 
 
 const checkAuth = (req,res)=>{

@@ -40,8 +40,9 @@ getUsers: async () => {
     const { messages, selectedUser } = get();
     try {
       const res = await axiosInstance.post(`/message/send/${selectedUser._id}`, messageData);
-      set({ messages: [...messages, res.data] });
-    } catch (error) {
+      console.log("Nessage",res.data.data)
+      set({ messages: [...messages, res.data.data] });
+    } catch (error) { 
       toast.error("Something went wrong while sending the message");
       console.log(error);
     }
