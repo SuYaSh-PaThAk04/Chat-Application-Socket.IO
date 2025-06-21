@@ -9,18 +9,17 @@ function Sidebar() {
   const { onlineUsers = [] } = AuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
-  // Call getUsers once on mount to avoid infinite loops :contentReference[oaicite:1]{index=1}
   useEffect(() => {
     chatStore.getState().getUsers();
   }, []);
 
   if (isUsersLoading) return <SideSkelton />;
 
-
-
   const filteredUsers = showOnlineOnly
     ? users.filter((u) => onlineUsers.includes(u._id))
     : users;
+console.log("🟡 onlineUsers from AuthStore:", onlineUsers);
+console.log("🟢 allUsers from chatStore:", users.map(u => u._id));
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r flex flex-col">

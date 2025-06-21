@@ -3,7 +3,7 @@ import { axiosInstance } from "../Axios/axios";
 import toast from "react-hot-toast";
 import io from "socket.io-client";
 
-const Base_URL = "http://localhost:3000/api";
+const Base_URL = "http://localhost:3000/";
 
 export const AuthStore = create((set, get) => ({
   authUser: null,
@@ -74,7 +74,6 @@ export const AuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/update-profile", data);
 
-      // ✅ Store only the updated user object
       set({ authUser: res.data.data });
 
       console.log("Updated authUser:", res.data.data);
@@ -89,19 +88,23 @@ export const AuthStore = create((set, get) => ({
 
   connectSocket: () => {
     const { authUser, socket } = get();
-
-    // ✅ Prevent connecting if not logged in or already connected
     if (!authUser || socket?.connected) return;
-
+    console.log("id:",authUser?.data?.user._id);
+    
     const newSocket = io(Base_URL, {
       query: {
-        userId: authUser._id, // ✅ Now this will work
+        userId: authUser?.data?.user._id,
       },
+     transports: ["websocket"], 
     });
 
-    newSocket.connect();
+  
+  newSocket.on("connect", () => {
+    console.log("🟢 Connected to socket");
+  });
 
     newSocket.on("getOnlineUsers", (userIds) => {
+       console.log("🟢 Online users:", userIds);
       set({ onlineUsers: userIds });
     });
 

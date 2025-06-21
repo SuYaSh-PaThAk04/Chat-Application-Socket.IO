@@ -4,7 +4,7 @@ import { ApiError } from "../Utils/ApiError.js";
 import { ApiResponse } from "../Utils/apiResponse.js";
 import { asyncHandler } from "../Utils/asyncHandller.js";
 import Cloudniary from "../Utils/Cloudinary.js";
-import { getRecieverid, io } from "../Utils/Socket.js";
+import { getRecieverid, getIO } from "../Utils/Socket.js";
 
 const getUserForSideBar = asyncHandler(async(req,res)=>{
 try {
@@ -63,6 +63,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
     const recieverSocketId = getRecieverid(recieverId);
     if (recieverSocketId) {
+      const io = getIO();
       io.to(recieverSocketId).emit("newMessage", newMessage);
     }
 

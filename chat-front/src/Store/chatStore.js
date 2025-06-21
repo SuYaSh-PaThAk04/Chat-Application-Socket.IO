@@ -54,10 +54,15 @@ getUsers: async () => {
 
     const socket = AuthStore.getState().socket;
 
-    socket.on("NewMessage", (newMessage) => {
-      const isFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isFromSelectedUser) return;
+  socket.on("newMessage", (newMessage) => {
+     const senderId =
+  typeof newMessage.senderId === "object"
+    ? newMessage.senderId._id
+    : newMessage.senderId;
 
+const isFromSelectedUser = senderId === selectedUser._id;
+      if (!isFromSelectedUser) return;
+    console.log("📨 New message received via socket:", newMessage);
       set({
         messages: [...get().messages, newMessage],
       });

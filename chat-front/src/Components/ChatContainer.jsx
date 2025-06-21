@@ -55,13 +55,7 @@ const authUserId = authUser?.data?.user?._id;
             typeof message.senderId === "object"
               ? message.senderId._id
               : message.senderId;
-
           const isSentByMe = senderId === authUserId;
-
-          console.log("💬 Message:", message);
-          console.log("   senderId:", senderId, "| isSentByMe:", isSentByMe);
-          console.log("   authUserId:", authUserId);
-         console.log("🟡 Raw authUser from AuthStore:", authUser);
           return (
             <div
               key={message._id}
