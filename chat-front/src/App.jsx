@@ -19,10 +19,9 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
   useEffect(() => {
-    checkAuth(); // Zustand handles stable reference
+    checkAuth();
   }, [checkAuth]);
 
-  // Show spinner only during first-time auth check
   if (isCheckingAuth) {
     return (
       <div className='flex items-center justify-center h-screen'>
