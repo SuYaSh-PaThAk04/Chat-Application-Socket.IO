@@ -8,7 +8,7 @@ import cors from "cors";
 const app = express();
 
 app.use(cors({
-  origin: "https://chat-application-socket-io-dun.vercel.app",
+  origin: "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app/",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
