@@ -18,8 +18,6 @@ function Sidebar() {
   const filteredUsers = showOnlineOnly
     ? users.filter((u) => onlineUsers.includes(u._id))
     : users;
-console.log("🟡 onlineUsers from AuthStore:", onlineUsers);
-console.log("🟢 allUsers from chatStore:", users.map(u => u._id));
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r flex flex-col">
