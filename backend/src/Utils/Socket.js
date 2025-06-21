@@ -12,7 +12,7 @@ export function getRecieverid(userId) {
 export function initializeSocket(server) {
     io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: "chat-application-socket-io-dun.vercel.app",
       methods: ["GET", "POST"],
       credentials: true,
     },
