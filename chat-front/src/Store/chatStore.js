@@ -14,7 +14,6 @@ getUsers: async () => {
   set({ isUsersLoading: true });
   try {
     const res = await axiosInstance.get("/message/users");
-    console.log("Fetched users:", res.data.data);
     set({ users: res.data.data });
   } catch (e) {
     toast.error("Failed to load users");
@@ -40,7 +39,6 @@ getUsers: async () => {
     const { messages, selectedUser } = get();
     try {
       const res = await axiosInstance.post(`/message/send/${selectedUser._id}`, messageData);
-      console.log("Nessage",res.data.data)
       set({ messages: [...messages, res.data.data] });
     } catch (error) { 
       toast.error("Something went wrong while sending the message");
@@ -62,7 +60,6 @@ getUsers: async () => {
 
 const isFromSelectedUser = senderId === selectedUser._id;
       if (!isFromSelectedUser) return;
-    console.log("📨 New message received via socket:", newMessage);
       set({
         messages: [...get().messages, newMessage],
       });
