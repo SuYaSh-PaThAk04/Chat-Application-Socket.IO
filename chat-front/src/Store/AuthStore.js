@@ -76,7 +76,6 @@ export const AuthStore = create((set, get) => ({
 
       set({ authUser: res.data.data });
 
-      console.log("Updated authUser:", res.data.data);
       toast.success("Profile updated successfully");
     } catch (error) {
       console.error(error);
@@ -89,8 +88,6 @@ export const AuthStore = create((set, get) => ({
   connectSocket: () => {
     const { authUser, socket } = get();
     if (!authUser || socket?.connected) return;
-    console.log("id:",authUser?.data?.user._id);
-    
     const newSocket = io(Base_URL, {
       query: {
         userId: authUser?.data?.user._id,
@@ -104,7 +101,6 @@ export const AuthStore = create((set, get) => ({
   });
 
     newSocket.on("getOnlineUsers", (userIds) => {
-       console.log("🟢 Online users:", userIds);
       set({ onlineUsers: userIds });
     });
 
