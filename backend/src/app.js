@@ -6,7 +6,10 @@ import cors from "cors";
 
 const app = express();
 
-const allowedOrigin = "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app";
+const allowedOrigins = [
+  "https://chat-application-socket-cudt7aoq8-suyash-pathak04s-projects.vercel.app",
+  "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app"
+];
 
 app.use(cors({
   origin: allowedOrigin,
