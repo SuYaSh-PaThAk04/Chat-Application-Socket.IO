@@ -5,11 +5,16 @@ import routerM from "./Routes/message.routes.js";
 import cors from "cors";
 
 const app = express();
-
+const allowedOrigins = [
+  "https://chat-application-socket-cudt7aoq8-suyash-pathak04s-projects.vercel.app",
+  "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app",
+  "https://chat-application-socket-io-dun.vercel.app",
+  "https://chat-application-socket-io-dun.vercel.app/"
+];
 
 app.use(
   cors({
-    origin: "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app/",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
