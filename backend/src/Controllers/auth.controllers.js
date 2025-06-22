@@ -22,7 +22,8 @@ try {
 }
   const options = {
     httpOnly : true,
-    secure : true
+    secure : true,
+   sameSite: "None", 
   }
 const signUpUser = asyncHandler(async(req,res)=>{
 
