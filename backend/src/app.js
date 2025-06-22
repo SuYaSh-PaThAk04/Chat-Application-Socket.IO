@@ -7,6 +7,11 @@ import cors from "cors";
 
 const app = express();
 
+
+const allowedOrigins = [
+  "https://chat-application-socket-io-dun.vercel.app", 
+  "http://localhost:5173" 
+];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
