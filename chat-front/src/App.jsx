@@ -18,6 +18,7 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
@@ -34,13 +35,12 @@ function App() {
     <>
       <NavBar />
       <Routes>
-     <Routes>
-  <Route path='/' element={authUser ? <Homepage /> : <Navigate to="/login" />} />
-  <Route path='/signup' element={!authUser ? <SignUp /> : <Navigate to="/" />} />
-  <Route path='/login' element={!authUser ? <Login /> : <Navigate to="/" />} />
-  <Route path='/settings' element={authUser ? <SettingsPage /> : <Navigate to="/login" />} />
-  <Route path='/profile' element={authUser ? <Profile /> : <Navigate to="/login" />} />
-</Routes>
+        <Route path='/' element={authUser ? <Homepage /> : <Navigate to="/login" />} />
+        <Route path='/signup' element={!authUser ? <SignUp /> : <Navigate to="/" />} />
+        <Route path='/login' element={!authUser ? <Login /> : <Navigate to="/" />} />
+        <Route path='/settings' element={authUser ? <SettingsPage /> : <Navigate to="/login" />} />
+        <Route path='/profile' element={authUser ? <Profile /> : <Navigate to="/login" />} />
+      </Routes>
       <Toaster />
     </>
   );
