@@ -64,7 +64,7 @@ function SignUp() {
                     id="fullName"
                     name="fullName"
                     className="input input-bordered w-full pl-10"
-                    placeholder="John Doe"
+                    placeholder="Enter Your Full Name"
                     autoComplete="name"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -86,7 +86,7 @@ function SignUp() {
                     id="username"
                     name="username"
                     className="input input-bordered w-full pl-10"
-                    placeholder="johndoe123"
+                    placeholder="YourName123"
                     autoComplete="username"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
