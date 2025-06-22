@@ -1,12 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
-     server: {
-  proxy: {
-    '/api': 'https://chat-application-socket-io-r7sq.onrender.com'
-  }
-},
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://chat-application-socket-io-r7sq.onrender.com',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/socket.io': {
+        target: 'https://chat-application-socket-io-r7sq.onrender.com',
+        ws: true,
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   plugins: [react()],
-})
+});
