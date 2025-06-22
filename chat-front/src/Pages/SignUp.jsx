@@ -29,8 +29,10 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      console.log("✅ Form Submit Called");
     const isValid = validateForm();
     if (isValid === true) {
+    console.log("✅ Calling signUp with: ", formData);
       await signUp(formData);
       navigate('/'); // ✅ navigate after successful signup
     }
