@@ -1,4 +1,3 @@
-// app.js
 import express from "express";
 import router from "./Routes/auth.Route.js";
 import cookieParser from "cookie-parser";
@@ -9,12 +8,12 @@ const app = express();
 
 const allowedOrigins = [
   "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app",
-  "https://chat-application-socket-io.vercel.app",
+  "https://chat-application-socket-io.vercel.app"
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || process.env.CORS_ORIGIN.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
