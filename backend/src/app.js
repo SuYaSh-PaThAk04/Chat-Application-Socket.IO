@@ -13,9 +13,13 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+    if (!origin) return callback(null, true);
+
+    const cleanedOrigin = origin.replace(/\/$/, "");
+    if (allowedOrigins.includes(cleanedOrigin)) {
       callback(null, true);
     } else {
+      console.log("⛔ CORS Blocked:", origin);
       callback(new Error("Not allowed by CORS"));
     }
   },
@@ -25,7 +29,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.options("*", cors(corsOptions)); 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
