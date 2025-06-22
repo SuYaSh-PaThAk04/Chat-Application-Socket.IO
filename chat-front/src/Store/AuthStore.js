@@ -89,6 +89,7 @@ export const AuthStore = create((set, get) => ({
     const { authUser, socket } = get();
     if (!authUser || socket?.connected) return;
     const newSocket = io(Base_URL, {
+       withCredentials: true,
       query: {
         userId: authUser?.data?.user._id,
       },
