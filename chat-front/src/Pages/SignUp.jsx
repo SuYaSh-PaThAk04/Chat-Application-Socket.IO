@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { AuthStore } from '../Store/AuthStore';
 import { MessageSquare, User, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthImagePattern from '../Components/AuthImage';
 import toast from 'react-hot-toast';
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    fullName: "",
-    username: "",
-    email: "",
-    password: "",
+    fullName: '',
+    username: '',
+    email: '',
+    password: '',
   });
 
-  const navigate = useNavigate();
-  const { signUp, isSigningUp, authUser } = AuthStore();
-
-  useEffect(() => {
-    if (authUser) {
-      navigate("/");
-    }
-  }, [authUser, navigate]);
+  const { signUp, isSigningUp } = AuthStore();
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -32,16 +27,21 @@ function SignUp() {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = validateForm();
-    if (success === true)  signUp(formData);
+    const isValid = validateForm();
+    if (isValid === true) {
+      await signUp(formData);
+      navigate('/'); // ✅ navigate after successful signup
+    }
   };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
+      {/* Left Section */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
+          {/* Logo & Title */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -52,82 +52,97 @@ function SignUp() {
             </div>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-      
-            <InputField
-              id="fullName"
-              label="Full Name"
-              type="text"
-              value={formData.fullName}
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              icon={<User />}
-              placeholder="Enter Your Full Name"
-              autoComplete="name"
-            />
+            {/* Full Name */}
+            <div className="form-control">
+              <label htmlFor="fullName" className="label">
+                <span className="label-text font-medium">Full Name</span>
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-base-content/40" />
+                <input
+                  type="text"
+                  id="fullName"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="Your Full Name"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  autoComplete="name"
+                />
+              </div>
+            </div>
 
-           
-            <InputField
-              id="username"
-              label="Username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              icon={<User />}
-              placeholder="YourName123"
-              autoComplete="username"
-            />
+            {/* Username */}
+            <div className="form-control">
+              <label htmlFor="username" className="label">
+                <span className="label-text font-medium">Username</span>
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-base-content/40" />
+                <input
+                  type="text"
+                  id="username"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="e.g., john_doe"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  autoComplete="username"
+                />
+              </div>
+            </div>
 
-       
-            <InputField
-              id="email"
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              icon={<Mail />}
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
+            {/* Email */}
+            <div className="form-control">
+              <label htmlFor="email" className="label">
+                <span className="label-text font-medium">Email</span>
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-base-content/40" />
+                <input
+                  type="email"
+                  id="email"
+                  className="input input-bordered w-full pl-10"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  autoComplete="email"
+                />
+              </div>
+            </div>
 
-           
+            {/* Password */}
             <div className="form-control">
               <label htmlFor="password" className="label">
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="size-5 text-base-content/40" />
-                </div>
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 size-5 text-base-content/40" />
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  name="password"
-                  className="input input-bordered w-full pl-10"
+                  className="input input-bordered w-full pl-10 pr-10"
                   placeholder="••••••••"
-                  autoComplete="new-password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? (
-                    <EyeOff className="size-5 text-base-content/40" />
-                  ) : (
-                    <Eye className="size-5 text-base-content/40" />
-                  )}
+                  {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                 </button>
               </div>
             </div>
 
+            {/* Submit */}
             <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
-                  Loading...
+                  Creating...
                 </>
               ) : (
                 "Create Account"
@@ -135,6 +150,7 @@ function SignUp() {
             </button>
           </form>
 
+          {/* Footer */}
           <div className="text-center">
             <p className="text-base-content/60">
               Already have an account?{" "}
@@ -146,7 +162,7 @@ function SignUp() {
         </div>
       </div>
 
-    
+      {/* Right Section */}
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
@@ -155,30 +171,6 @@ function SignUp() {
   );
 }
 
-function InputField({ id, label, type, value, onChange, icon, placeholder, autoComplete }) {
-  return (
-    <div className="form-control">
-      <label htmlFor={id} className="label">
-        <span className="label-text font-medium">{label}</span>
-      </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          {React.cloneElement(icon, { className: "size-5 text-base-content/40" })}
-        </div>
-        <input
-          type={type}
-          id={id}
-          name={id}
-          className="input input-bordered w-full pl-10"
-          placeholder={placeholder}
-          autoComplete={autoComplete}
-          value={value}
-          onChange={onChange}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default SignUp;
+
 
