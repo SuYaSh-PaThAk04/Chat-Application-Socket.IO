@@ -1,3 +1,4 @@
+// app.js
 import express from "express";
 import router from "./Routes/auth.Route.js";
 import cookieParser from "cookie-parser";
@@ -8,10 +9,10 @@ const app = express();
 
 const allowedOrigins = [
   "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app",
-  "https://chat-application-socket-io.vercel.app", // if using
+  "https://chat-application-socket-io.vercel.app",
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -21,8 +22,10 @@ app.use(cors({
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-}));
-app.options("*", cors());
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -33,4 +36,3 @@ app.use("/api/auth", router);
 app.use("/api/message", routerM);
 
 export default app;
-
