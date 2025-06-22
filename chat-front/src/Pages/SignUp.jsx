@@ -15,7 +15,7 @@ function SignUp() {
   });
 
   const navigate = useNavigate();
-  const { signup, isSigningUp, authUser } = AuthStore();
+  const { signUp, isSigningUp, authUser } = AuthStore();
 
   useEffect(() => {
     if (authUser) {
@@ -35,7 +35,7 @@ function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = validateForm();
-    if (success === true) signup(formData);
+    if (success === true)  signUp(formData);
   };
 
   return (
