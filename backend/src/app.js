@@ -8,20 +8,27 @@ import cors from "cors";
 const app = express();
 
 const allowedOrigins = [
-  "https://chat-application-socket-cudt7aoq8-suyash-pathak04s-projects.vercel.app",
-  "http://localhost:5173" 
+  "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app/",
+  "https://chat-application-socket-cudt7aoq8-suyash-pathak04s-projects.vercel.app/"
 ];
+
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true, 
-  methods: ["GET", "POST", "PUT", "DELETE"],
+origin: (origin, callback) => {
+  if (!origin || origin.endsWith(".vercel.app")) {
+    callback(null, true);
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+},
+  credentials: true 
 }));
+
+app.options(process.env.CORS_ORIGIN, cors({
+  origin: process.env.CORS_ORIGIN,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
