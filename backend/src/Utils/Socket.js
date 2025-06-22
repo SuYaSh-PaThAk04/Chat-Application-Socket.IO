@@ -3,6 +3,10 @@ import { Server } from "socket.io";
 
 const socketUserMap = {};
 let io;
+const allowedOrigins = [
+  "https://chat-application-socket-cudt7aoq8-suyash-pathak04s-projects.vercel.app",
+  "https://chat-application-socket-io-git-main-suyash-pathak04s-projects.vercel.app"
+];
 export function getIO() {
   return io;
 }
@@ -11,11 +15,17 @@ export function getRecieverid(userId) {
 }
 export function initializeSocket(server) {
     io = new Server(server, {
-    cors: {
-      origin: process.env.CORS_ORIGIN,
+   cors: {
+      origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Socket.IO CORS not allowed"));
+        }
+      },
       methods: ["GET", "POST"],
       credentials: true
-    },
+    }
   });
 
   io.on("connection", (socket) => {
