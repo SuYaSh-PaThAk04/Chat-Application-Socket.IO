@@ -17,6 +17,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     login(formData);
+    navigate("/"); 
   };
 
   return (
