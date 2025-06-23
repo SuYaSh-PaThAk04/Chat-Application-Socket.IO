@@ -33,7 +33,7 @@ export const AuthStore = create((set, get) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/auth/signup", data, { withCredentials: true });
-      set({ authUser: res.data.user });
+      set({ authUser: res.data });
       toast.success("Created Account Successfully!");
       get().connectSocket();
     } catch (error) {
@@ -47,7 +47,7 @@ export const AuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data, { withCredentials: true });
-      set({ authUser: res.data.user });
+      set({ authUser: res.data });
       toast.success("Logged in successfully");
       get().connectSocket();
     } catch (error) {
@@ -95,7 +95,7 @@ export const AuthStore = create((set, get) => ({
     const newSocket = io(Base_URL, {
       withCredentials: true,
       query: {
-        userId: authUser._id, 
+         userId: authUser?.data?.user._id, 
       },
       transports: ["websocket"],
     });
