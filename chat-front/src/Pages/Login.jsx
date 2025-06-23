@@ -3,7 +3,7 @@ import { AuthStore } from '../Store/AuthStore';
 import AuthImagePattern from '../Components/AuthImage';
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from 'lucide-react';
 import NavBar from '../Components/NavBar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,13 +11,16 @@ function Login() {
     email: "",
     password: "",
   });
-
+const navigate = useNavigate();
   const { login, isLoggingIn } = AuthStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(formData);
-    navigate("/"); 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  await login(formData);  
+  navigate("/");        
+};
   };
 
   return (
