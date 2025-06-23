@@ -13,15 +13,11 @@ function Login() {
   });
 const navigate = useNavigate();
   const { login, isLoggingIn } = AuthStore();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
   const handleSubmit = async (e) => {
   e.preventDefault();
   await login(formData);  
   navigate("/");        
 };
-  };
 
   return (
     <>
