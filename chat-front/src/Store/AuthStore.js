@@ -50,7 +50,6 @@ export const AuthStore = create((set, get) => ({
       set({ authUser: res.data.user });
       toast.success("Logged in successfully");
       get().connectSocket();
-      navigate("/"); 
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed.");
     } finally {
